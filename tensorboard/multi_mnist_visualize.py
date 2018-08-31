@@ -10,7 +10,12 @@ mnist = input_data.read_data_sets("MNIST_data/", one_hot=True)
 images = tf.Variable(mnist.test.images, name='images')
 
 #参数设置
-learning_rate = 0.001
+#learning_rate = 0.001
+#learning_rate = 0.01
+#learning_rate = 0.1
+#learning_rate = 0.6
+learning_rate = 0.8
+
 training_epochs = 25
 batch_size = 100
 display_step = 1
@@ -42,17 +47,14 @@ def multilayer_perceptron(x, weights, biases):
             W = weights['h1']
         with tf.name_scope('biases'):
             b = biases['b1']
-        #tf.summary.histogram('layer_1/weights', weights['h1'])
-        #tf.summary.histogram('layer_1/biases', biases['b1'])
         tf.summary.histogram('layer_1/weights', W)
         tf.summary.histogram('layer_1/biases', b)
-        with tf.name_scope('Wx_plus_b'):
-            # Hidden layer with RELU activation
-            #layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
-            layer_1 = tf.add(tf.matmul(x, W), b)
-            tf.summary.histogram('layer_1/pre_act', layer_1)
-            layer_1 = tf.nn.relu(layer_1)
-            tf.summary.histogram('layer_1/act', layer_1)
+        # Hidden layer with RELU activation
+        #layer_1 = tf.add(tf.matmul(x, weights['h1']), biases['b1'])
+        layer_1 = tf.add(tf.matmul(x, W), b)
+        tf.summary.histogram('layer_1/pre_act', layer_1)
+        layer_1 = tf.nn.relu(layer_1)
+        tf.summary.histogram('layer_1/act', layer_1)
 
     with tf.name_scope('layer_2'):
         with tf.name_scope('weight'):
@@ -60,29 +62,27 @@ def multilayer_perceptron(x, weights, biases):
         with tf.name_scope('biases'):
             b = biases['b2']
 
-        #tf.summary.histogram('layer_2/weights', weights['h2'])
-        #tf.summary.histogram('layer_2/biases', biases['b2'])
-        with tf.name_scope('Wx_plus_b'):
-            # Hidden layer with RELU activation
-            #layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
-            layer_2 = tf.add(tf.matmul(layer_1, W), b)
-            tf.summary.histogram('layer_2/pre_act', layer_2)
-            layer_2 = tf.nn.relu(layer_2)
-            tf.summary.histogram('layer_2/act', layer_2)
+        tf.summary.histogram('layer_2/weights', W)
+        tf.summary.histogram('layer_2/biases', b)
+        # Hidden layer with RELU activation
+        #layer_2 = tf.add(tf.matmul(layer_1, weights['h2']), biases['b2'])
+        layer_2 = tf.add(tf.matmul(layer_1, W), b)
+        tf.summary.histogram('layer_2/pre_act', layer_2)
+        layer_2 = tf.nn.relu(layer_2)
+        tf.summary.histogram('layer_2/act', layer_2)
     
     with tf.name_scope('out_layer'):
-        #tf.summary.histogram('out/weights', weights['h2'])
-        #tf.summary.histogram('out/biases', biases['b2'])
         with tf.name_scope('weight'):
             W = weights['out']
         with tf.name_scope('biases'):
             b = biases['out']
 
-        with tf.name_scope('Wx_plus_b'):
-            # Output layer with linear activation
-            #out_layer = tf.matmul(layer_2, weights['out']) + biases['out']
-            out_layer = tf.matmul(layer_2, W) + b
-            tf.summary.histogram('out/value', out_layer)
+        tf.summary.histogram('out_layer/weights', W)
+        tf.summary.histogram('out_layer/biases', b)
+        # Output layer with linear activation
+        #out_layer = tf.matmul(layer_2, weights['out']) + biases['out']
+        out_layer = tf.matmul(layer_2, W) + b
+        tf.summary.histogram('out/value', out_layer)
     
     return out_layer
     

@@ -22,17 +22,18 @@ with tf.name_scope('input_reshape'):
     image_shaped_input = tf.reshape(x, [-1, 28, 28, 1])
     tf.summary.image('input', image_shaped_input, 10)
 
-with tf.name_scope('summaries'):
-    # Set model weights
-    W = tf.Variable(tf.random_normal([784, 10]))
-    tf.summary.histogram('weights', W)
-    b = tf.Variable(tf.zeros([10]))
-    tf.summary.histogram('bias', b)
+# Set model weights
+W = tf.Variable(tf.random_normal([784, 10]), name="weights")
+tf.summary.histogram('weights', W)
+b = tf.Variable(tf.zeros([10]), name="biases")
+tf.summary.histogram('bias', b)
 
-with tf.name_scope('Wx_plus_b'):
+with tf.name_scope('layer_1'):
     # 构建模型
-    pred = tf.nn.softmax(tf.matmul(x, W) + b) # Softmax分类
-    tf.summary.histogram('pred', pred)
+    pred = tf.matmul(x, W) + b
+    tf.summary.histogram('pre_act', pred)
+    pred = tf.nn.softmax(pred) # Softmax分类
+    tf.summary.histogram('act', pred)
 
 with tf.name_scope('cost'):
     # Minimize error using cross entropy
@@ -48,7 +49,9 @@ display_step = 1
 #参数设置
 #learning_rate = 0.001
 #learning_rate = 0.01
-learning_rate = 0.3
+#learning_rate = 0.1
+#learning_rate = 0.6
+learning_rate = 0.8
 
 with tf.name_scope('train'):
     optimizer = tf.train.GradientDescentOptimizer(learning_rate).minimize(cost)
